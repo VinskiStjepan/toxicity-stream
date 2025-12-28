@@ -1,0 +1,20 @@
+Delete _chk folder to remove Spark offsets and state.
+
+Start containers:
+podman-compose down
+podman-compose up -d
+
+Create kafka topics commands:
+podman exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic comments_raw --partitions 3 --replication-factor 1
+podman exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic comments_scored --partitions 3 --replication-factor 1
+podman exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic toxic_alerts --partitions 3 --replication-factor 1
+podman exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+Start spark consumer:
+podman exec -it spark /opt/spark/bin/spark-submit --master spark://spark:7077 /opt/app/app/spark_stream.py
+
+Start consumer alert command:
+podman exec -it spark python3 /opt/app/app/consumer_alerts.py
+
+Start producer command:
+podman exec -it spark python3 /opt/app/app/producer.py
