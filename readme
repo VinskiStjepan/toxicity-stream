@@ -1,10 +1,13 @@
-Delete _chk folder to remove Spark offsets and state.
+Images of running project are in ProjectPrintScreen
 
-Start containers:
+Delete _chk folder in app folder (app/_chk) to remove Spark offsets and state.
+
+Start containers (start terminal in project location):
+podman machine start
 podman-compose down
 podman-compose up -d
 
-Create kafka topics commands:
+Create kafka topics commands (after containers are UP):
 podman exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic comments_raw --partitions 3 --replication-factor 1
 podman exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic comments_scored --partitions 3 --replication-factor 1
 podman exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic toxic_alerts --partitions 3 --replication-factor 1
